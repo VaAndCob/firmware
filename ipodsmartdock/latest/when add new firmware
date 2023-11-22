@@ -1,8 +1,2 @@
 rename firmware to "ipodsmartdock_v2.bin"
 change the version number in "version"
-
-2.0.1 
-- Fix captive portal on WiFi configuration
-- Fix execute album not working 
-2.0.2 
-- Check firmware online and upgrade online.
