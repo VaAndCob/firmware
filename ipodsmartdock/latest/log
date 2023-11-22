@@ -1,0 +1,5 @@
+2.0.1 
+- Fix captive portal on WiFi configuration
+- Fix excute album not working 
+2.0.2 
+- Check firmware online and upgrade online.
