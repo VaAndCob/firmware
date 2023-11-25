@@ -9,3 +9,4 @@ VERSION CONTROL<br>
 - mDNS on configuration mode added<br>
 - firmware update on configuration mode added<br>
 - iPod database query timeout added<br>
+- new firmware update notification in About page added<br>
