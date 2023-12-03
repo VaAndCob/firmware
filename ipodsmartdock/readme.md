@@ -14,7 +14,7 @@ VERSION CONTROL
 - iPod database query timeout added  
 - A new firmware update notification on the About page added
 
-2.0.3<br>
+2.0.3
 - Online firmware update OTA
 - Captive portal home page added
 - Light Ring Support
