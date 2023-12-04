@@ -15,6 +15,6 @@ VERSION CONTROL
 - A new firmware update notification on the About page added
 
 2.0.3
-- Online firmware update OTA
+- Online OTA firmware update added
 - Captive portal home page added
 - Light Ring Support
