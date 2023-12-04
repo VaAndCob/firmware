@@ -4,7 +4,7 @@ VERSION CONTROL
 - First release  
 
 2.0.1  
-- adptive portal on configuration mode added  
+- adaptive portal on configuration mode added  
 - execute album not working fixed  
 - A new firmware update notification on the start page added  
 
