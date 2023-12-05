@@ -18,3 +18,7 @@ VERSION CONTROL
 - Online OTA firmware update added
 - Captive portal home page added
 - Light Ring Support
+
+2.0.4
+- Prompt page connect button fixed
+- Query song database timeout fixed
