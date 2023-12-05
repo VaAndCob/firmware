@@ -1,8 +1,8 @@
 {
   "version" : "2.0.3",
   "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_3.bin",
-  "detail": {
-    "0":"- Prompt page connect button fixed",
-    "1":"- Query song database timeout fixed"
-  } 
+  "detail": [
+    "- Prompt page connect button fixed",
+    "- Query song database timeout fixed"
+  ] 
 }
