@@ -1,8 +1,10 @@
 {
-  "version" : "2.0.4",
-  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_4.bin",
+  "version" : "2.0.5",
+  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_5.bin",
   "detail": [
-    "- Prompt page connect button fixed",
-    "- Query song database timeout fixed"
+    "- Playlist read only 1 fixed",
+    "ช่วงนี้จะมีการออกโปรแกรมใหม่เรื่อยๆ เพื่อปรับปรุงแก้ไขปัญหาให้การใช้งานสะดวกที่สุด",
+    "หากมีปัญหาหรือข้อสงสัยสามารถสอบถามได้นะครับ",
+    "ขอบคุณครับ"
   ] 
 }
