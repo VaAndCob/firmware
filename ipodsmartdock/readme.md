@@ -22,3 +22,6 @@ VERSION CONTROL
 2.0.4
 - Prompt page connect button fixed
 - Query song database timeout fixed
+
+2.0.5
+- Playlist read only 1 fixed
