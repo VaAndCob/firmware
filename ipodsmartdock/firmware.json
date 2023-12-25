@@ -1,9 +1,9 @@
 {
-  "version" : "2.0.5",
+  "version" : "2.0.6",
   "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_5.bin",
   "detail": [
-    "- Playlist read only 1 fixed",
-    "ช่วงนี้จะมีการออกโปรแกรมใหม่เรื่อยๆ เพื่อปรับปรุงแก้ไขปัญหาการใช้งานให้สะดวกที่สุด",
+    "- Over scroll fixed",
+    "- Scroll position indicator added",
     "หากมีปัญหาหรือข้อสงสัยสามารถสอบถามหรือทักแชทได้นะครับ ขอบคุณครับ"
   ] 
 }
