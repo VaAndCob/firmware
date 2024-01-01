@@ -1,9 +1,10 @@
 {
-  "version" : "2.0.6",
-  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_6.bin",
+  "version" : "2.0.7",
+  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_7.bin",
   "detail": [
-    "- Over scroll fixed",
-    "- Scroll position indicator added",
-    "หากมีปัญหาหรือข้อสงสัยสามารถสอบถามหรือทักแชทได้นะครับ ขอบคุณครับ"
+    "- Recent playlist/artist/album/song index added",
+    "(touch wheel จดจำตำแหน่งล่าสุดใน playlist/artist/album/song)",
+    "- VU meter accessory added (เชื่อมต่อ VU Meter)",
+ 
   ] 
 }
