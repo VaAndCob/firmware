@@ -25,3 +25,11 @@ VERSION CONTROL
 
 2.0.5
 - Playlist read only 1 fixed
+
+2.0.6
+- Over scroll fixed
+- Scroll position indicator added
+
+2.0.7
+- Recent playlist/artist/album/song index added
+- VU meter accessory added
