@@ -33,3 +33,7 @@ VERSION CONTROL
 2.0.7
 - Recent playlist/artist/album/song index added
 - VU meter accessory added
+
+2.0.8
+- Equalizer setting implemented 
+- เพิ่ม การตั้งค่าอีควอไลเซอร์
