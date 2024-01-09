@@ -1,9 +1,8 @@
 {
-  "version" : "2.0.7",
-  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_7.bin",
+  "version" : "2.0.8",
+  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_8.bin",
   "detail": [
-    "- Recent playlist/artist/album/song index added",
-    "(touch wheel จดจำตำแหน่งล่าสุดใน playlist/artist/album/song)",
-    "- VU meter accessory added (เชื่อมต่อ VU Meter)" 
+    "- Equalizer setting implemented",
+    "- เพิ่มการตั้งอิคลอไลเซอร์"
   ] 
 }
