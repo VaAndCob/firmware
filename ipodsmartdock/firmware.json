@@ -2,11 +2,9 @@
   "version": "2.1.0",
   "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_8.bin",
   "detail": [
-   "- Music database query after reconnect error fixed",
-   "- Connection stability improved",
-   "- Smartphone touching improved",
-   "- Continue navigate & control if iPod is connected implemented",
    "- 3 Thai fonts added",
-   "- Accessories menu implemented "
+   "- Accessories menu implemented ",
+   "- Continue navigate & control if iPod is connected implemented",
+   "- Connection stability & Smartphone touching improved"
   ]
 }
