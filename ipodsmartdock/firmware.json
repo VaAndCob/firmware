@@ -1,5 +1,5 @@
 {
-  "version" : "2.1.0",
+  "version": "2.1.0",
   "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_8.bin",
   "detail": [
    "- Music database query after reconnect error fixed",
