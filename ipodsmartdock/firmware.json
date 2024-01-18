@@ -1,8 +1,12 @@
 {
-  "version" : "2.0.8",
+  "version" : "2.1.0",
   "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_0_8.bin",
   "detail": [
-    "- Equalizer setting implemented",
-    "- เพิ่มการตั้งอิคลอไลเซอร์"
+   "- Music database query after reconnect error fixed",
+   "- Connection stability improved",
+   "- Smartphone touching improved",
+   "- Continue navigate & control if iPod is connected implemented",
+   "- 3 Thai fonts added",
+   "- Accessories menu implemented ",
   ]
 }
