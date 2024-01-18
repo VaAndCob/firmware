@@ -36,4 +36,9 @@ VERSION CONTROL
 
 2.0.8
 - Equalizer setting implemented 
-- เพิ่ม การตั้งค่าอีควอไลเซอร์
+
+2.1.0
+- 3 Thai fonts added
+- Accessories menu implemented
+- Continue navigate & control if iPod is connected implemented
+- Connection stability & Smartphone touching improved
