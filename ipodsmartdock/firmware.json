@@ -1,10 +1,12 @@
 {
-  "version": "2.1.0",
-  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_0.bin",
+  "version": "2.1.1",
+  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_1.bin",
   "detail": [
-   "- 3 Thai fonts added",
-   "- Accessories menu implemented ",
-   "- Continue navigate & control if iPod is connected implemented",
-   "- Connection stability & Smartphone touching improved"
+  "- Increase music database query speed",
+  "- Media files auto-download implemented",
+  "- Clicker sound implemented",
+  "- Theme added",
+  "- New clock page",
+  "- Minor bug fixed",
   ]
 }
