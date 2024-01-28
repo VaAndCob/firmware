@@ -40,5 +40,13 @@ VERSION CONTROL
 2.1.0
 - 3 Thai fonts added
 - Accessories menu implemented
-- Continue navigate & control if iPod is connected implemented
+- Continue navigating & control if the iPod is connected implemented
 - Connection stability & Smartphone touching improved
+
+2.1.1  
+- Increase music database query speed
+- Media files auto-download implemented
+- Clicker sound implemented
+- Theme added
+- New clock page
+- Minor bug fixed
