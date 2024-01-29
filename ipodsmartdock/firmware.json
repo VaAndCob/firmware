@@ -1,6 +1,6 @@
 {
-  "version": "2.1.0",
-  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_0.bin",
+  "version": "2.1.1",
+  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_1.bin",
   "detail": [
   "- Increase music database query speed",
   "- Media files auto-download implemented",
