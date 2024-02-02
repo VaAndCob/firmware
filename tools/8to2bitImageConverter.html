@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8bit to 2bit greyscale image byte array converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .border-frame {
+      border: 2px solid #333;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px;
+      width: 90%;
+      height: 80vh;
+      box-sizing: border-box;
+      overflow: auto;
+    }
+
+    canvas {
+      border: 2px solid #333;
+      margin: 10px 0;
+    }
+
+    label, input, textarea {
+      display: inline-block;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    label {
+  
+      text-align: left;
+      padding: 10px;
+    }
+
+    input {
+      width: 15%;
+  
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    textarea {
+  width: 100%;
+  box-sizing: border-box;
+  /* Other styles for textarea */
+}
+.border-frame textarea {
+  width: 100%;
+  box-sizing: border-box;
+  /* Other styles for textarea */
+}
+
+  </style>
+</head>
+<body>
+  <h2>Monochrome 8 bit to 2 bit per pixel image converter by Va&amp;Cob</h2>
+  <p>
+    This tool is for converting '8bit/pixel greyscale image byte array' into '2bit/pixel greyscale byte array' for use with old monochrome iPod display.<br>
+    How to use: Use Window Paint, edit image, and save as monochrome .bmp (recommended size 128x64px).<br>
+    Navigate to <a href="https://notisrac.github.io/FileToCArray/" target="_blank" rel="noopener noreferrer">Image to C Array</a>
+    with the option "8bit greyscale (1byte/pixel)".<br>
+    Copy the byte array and paste it into the textarea below.<br>
+  </p>
+
+  <div class="container">
+    <div class="border-frame">
+      <legend> Paste 8 bit/pixel monochrome image byte array </legend>
+      <textarea id="imageInput" rows="15" cols="50" placeholder="#define DISPLAYIMAGE_HEIGHT 64
+#define DISPLAYIMAGE_WIDTH 128
+
+// array size is 8192
+byte displayImage[]  = {
+  0x0c, 0xf0, 0x00, ..."></textarea>
+      <label for="imageWidth">Image Size</label>
+      <input type="number" id="imageWidth" placeholder="Width" value="128" maxlength="3">
+      <label for="imageHeight"> X </label>
+      <input type="number" id="imageHeight" placeholder="Height" value="64" maxlength="3">
+      <button onclick="performConversion()">Convert Image</button>
+    </div>
+
+    <div class="border-frame">
+      <legend> 2 bit/pixel grey image byte array output </legend>
+      <textarea id="consoleOutput" rows="15" cols="50" placeholder="Conversion output will appear here..." readonly></textarea>
+      <button onclick="showImage()">Draw Image</button>
+      <button onclick="copyToClipboard()">Copy to Clipboard</button>
+      <br>
+      <canvas id="imageCanvas"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function copyToClipboard() {
+      const consoleOutput = document.getElementById('consoleOutput');
+      consoleOutput.select();
+      document.execCommand('copy');
+      alert('Copied to clipboard!');
+    }
+
+    function performConversion() {
+      const imageDataInput = document.getElementById('imageInput').value;
+      const grayImage = imageDataInput.split(',').map(Number);
+      const WIDTH = 128;
+      const HEIGHT = 64;
+      let consoleLogs = "";
+      function appendLog(log) {
+        consoleLogs += log;
+      }
+      convertAndDisplay(grayImage, WIDTH, HEIGHT, appendLog);
+      document.getElementById('consoleOutput').value = consoleLogs;
+    }
+
+    function convertAndDisplay(grayImage, width, height, appendLog) {
+      const byteSize = (width * height) / 4;
+      const fourPixelByte = new Uint8Array(byteSize);
+      const rawImageSize = width * height;
+      let byteIndex = 0;
+      //combine 4 byte 4 pixel to 1 byte 4 pixel
+      for (let i = 0; i < rawImageSize; i += 4) {
+        const twoBit4 = grayImage[i] >> 6 & 0b00000011;
+        const twoBit3 = grayImage[i + 1] >> 4 & 0b00000011;
+        const twoBit2 = grayImage[i + 2] >> 2 & 0b00000011;
+        const twoBit1 = grayImage[i + 3] & 0b00000011;
+        fourPixelByte[byteIndex] = 255-(twoBit1 | (twoBit2 << 2) | (twoBit3 << 4) | (twoBit4 << 6));
+        appendLog(`0x${fourPixelByte[byteIndex].toString(16).padStart(2, '0')}`);
+        byteIndex++;
+        const fractionalPart = byteIndex % (width / 4);
+        if (fractionalPart !== 0.0) {
+          if (byteIndex < byteSize) appendLog(",");
+        } else {
+          if (byteIndex < byteSize) appendLog(",\n");
+        }
+      }
+    }
+
+    function showImage() {
+      const width = parseInt(document.getElementById('imageWidth').value, 10) || 128;
+      const height = parseInt(document.getElementById('imageHeight').value, 10) || 64;
+      canvas.width = width * 4;
+      canvas.height = height * 4;
+      const byteArrayText = document.getElementById('consoleOutput').value.replaceAll(/\s/g, '');
+      const stringArray = byteArrayText.split(',');
+      const imageData = new Uint8Array(stringArray.length);
+      for (let i = 0; i< stringArray.length; i++) {
+        imageData[i] = parseInt(stringArray[i], 16);
+      }
+      let index = 0;
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x=x+4) {//split 8 bit to 2 bit x 4 bytes
+          let pixelValue = 255 - (imageData[index] & 0b11000000);//select first 2 MSB
+          ctx.fillStyle = `rgb(${pixelValue}, ${pixelValue}, ${pixelValue})`;//apply color
+          ctx.fillRect(x * 4 , y * 4 , 4, 4);//plot first left most pixel
+          pixelValue = 255 - (imageData[index] << 2 & 0b11000000);//shift 2 and select first 2 MSB
+          ctx.fillStyle = `rgb(${pixelValue}, ${pixelValue}, ${pixelValue})`;
+          ctx.fillRect((x+1) * 4 , y * 4 , 4, 4);
+          pixelValue = 255 - (imageData[index] << 4 & 0b11000000);
+          ctx.fillStyle = `rgb(${pixelValue}, ${pixelValue}, ${pixelValue})`;
+          ctx.fillRect((x+2) * 4 , y * 4 , 4, 4);
+          pixelValue = 255 - (imageData[index] << 4 & 0b11000000);
+          ctx.fillStyle = `rgb(${pixelValue}, ${pixelValue}, ${pixelValue})`;
+          ctx.fillRect((x+3 )* 4 , y * 4 , 4, 4);//plot right most pixel
+          index++;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
