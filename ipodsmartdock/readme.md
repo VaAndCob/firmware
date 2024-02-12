@@ -50,3 +50,8 @@ VERSION CONTROL
 - Theme added
 - New clock page
 - Minor bug fixed
+  
+2.1.2
+- Set gray display screen implemented
+- Accessories improved
+- Minor bug fixed
