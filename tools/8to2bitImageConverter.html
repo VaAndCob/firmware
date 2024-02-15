@@ -86,10 +86,44 @@
         box-sizing: border-box;
         /* Other styles for textarea */
       }
+      .button-container {
+      display: flex;
+      justify-content: center; /* Align items horizontally */
+      margin-top: 20px; /* Adjust as needed */
+    }
+
+    .button-container .tile {
+      background-color: #000000;
+      color: white;
+      padding: 10px;
+      margin: 0 5px; /* Adjust spacing between tiles */
+      cursor: pointer;
+    }
+
+    /* Define different colors for different tiles */
+    .button-container .tile:nth-child(2) {
+      background-color: #555555;
+    }
+
+    .button-container .tile:nth-child(3) {
+      background-color: #aaaaaa;
+    }
+
+    .button-container .tile:nth-child(4) {
+      background-color: #ffffff;
+      color: black;
+    }
     </style>
   </head>
   <body>
-    <h2>Monochrome 8 bit to 2 bit per pixel image converter by Va&amp;Cob</h2> This tool is for converting '8bit/pixel greyscale image byte array' into '2bit/pixel greyscale byte array' for use with old monochrome iPod display. <br>
+    <h2>Monochrome 8 bit to 2 bit per pixel image converter by Va&amp;Cob</h2> This tool is for converting '8bit/pixel greyscale image byte array' into '2bit/pixel greyscale byte array'<br>
+    <div class="button-container">
+      for use with old monochrome iPod display
+      <div class="tile">0x00</div>
+      <div class="tile">0x55</div>
+      <div class="tile">0xaa</div>
+      <div class="tile">0xff</div>
+    </div>
     <div class="container">
       <div class="border-frame">
         <p> How to use: <br>Use Window Paint, edit image, and save as monochrome .bmp (recommended size 128x64px). <br>navigate to <a href="https://notisrac.github.io/FileToCArray/" target="_blank" rel="noopener noreferrer">Image to C Array</a> with the option "8bit greyscale (1byte/pixel)" <br>Copy the byte array and paste it into the textarea below. </p>
@@ -107,7 +141,7 @@ byte displayImage[]  = {
       </div>
       <div class="border-frame">
         <legend> 2 bit/pixel grey image byte array output </legend>
-        <textarea id="consoleOutput" rows="15" cols="50" placeholder="Conversion output will appear here..." readonly></textarea>
+        <textarea id="consoleOutput" rows="15" cols="50" placeholder="Conversion output will appear here..."></textarea>
         <button onclick="showImage()">Draw Image</button>
         <button onclick="copyToClipboard()">Copy to Clipboard</button>
         <br>
