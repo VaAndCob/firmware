@@ -37,6 +37,10 @@
         box-sizing: border-box;
         overflow: auto;
       }
+      .container .border-frame #bmpInfo {
+       text-align: left;
+      padding: 10px;
+        }
 
       canvas {
         border: 2px solid #333;
@@ -116,7 +120,7 @@
     </style>
   </head>
   <body>
-    <h2>Monochrome 8 bit to 2 bit per pixel image converter by Va&amp;Cob</h2> This tool is for converting '8bit/pixel greyscale image byte array' into '2bit/pixel greyscale byte array'<br>
+    <h2>Monochrome 4 bit to 2 bit per pixel image converter by Va&amp;Cob</h2> This tool is for converting '4 bit/pixel greyscale image byte array' into '2 bit/pixel greyscale byte array'<br>
     <div class="button-container">
       for use with old monochrome iPod display
       <div class="tile">0x00</div>
@@ -124,19 +128,18 @@
       <div class="tile">0xaa</div>
       <div class="tile">0xff</div>
     </div>
+    
     <div class="container">
       <div class="border-frame">
-        <p> How to use: <br>Use Window Paint, edit image, and save as monochrome .bmp (recommended size 128x64px). <br>navigate to <a href="https://notisrac.github.io/FileToCArray/" target="_blank" rel="noopener noreferrer">Image to C Array</a> with the option "8bit greyscale (1byte/pixel)" <br>Copy the byte array and paste it into the textarea below. </p>
-        <textarea id="imageInput" rows="20" cols="50" placeholder="#define DISPLAYIMAGE_HEIGHT 64
-#define DISPLAYIMAGE_WIDTH 128
-      
-// array size is 8192
-byte displayImage[]  = {
-  0x0c, 0xf0, 0x00, ..."></textarea>
+        <p> How to use: Use GIMP app (set mode color palette 2 bit + flip vertical and export as .BMP)</p>
+        <h1>BMP File Information</h1>
+        <input type="file" id="fileInput" accept=".bmp">
+        <div id="bmpInfo"></div>
+        <textarea id="imageInput" rows="20" cols="50" placeholder="4 bit depth monochrome hex data array"></textarea>
         <label for="imageWidth">Image Size</label>
-        <input type="number" id="imageWidth" placeholder="Width" value="128" maxlength="3">
+        <input type="number" id="imageWidth" placeholder="Width" value="0" maxlength="4">
         <label for="imageHeight"> X </label>
-        <input type="number" id="imageHeight" placeholder="Height" value="64" maxlength="3">
+        <input type="number" id="imageHeight" placeholder="Height" value="0" maxlength="4">
         <button onclick="performConversion()">Convert Image</button>
       </div>
       <div class="border-frame">
@@ -149,34 +152,52 @@ byte displayImage[]  = {
       </div>
     </div>
     <script>
+      
+function parseBMPHeader(data) {
+    var header = {};
+    header.signature = String.fromCharCode(data[0], data[1]);
+    header.fileSize = data[2] + (data[3] << 8) + (data[4] << 16) + (data[5] << 24);
+    header.dataOffset = data[10] + (data[11] << 8) + (data[12] << 16) + (data[13] << 24);
+    header.imageWidth = data[18] + (data[19] << 8) + (data[20] << 16) + (data[21] << 24);
+    header.imageHeight = data[22] + (data[23] << 8) + (data[24] << 16) + (data[25] << 24);
+    header.bit_color_Depth = data[28] + (data[29] << 8);
+    header.Image_byte_count = header.fileSize - header.dataOffset;
+    return header;
+}
+
+function convertToHexArray(data, offset, width, height) {
+    let byteCount = Math.ceil(width * height / 2); // 4 bits per pixel (2 pixels per byte)
+    var hexArray = [];
+
+    for (var i = offset; i < offset + byteCount; i++) {
+        hexArray.push('0x' + data[i].toString(16).padStart(2, '0')); // Ensure 2-digit hex representation
+    }
+
+    return hexArray;
+}
+
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    var file = event.target.files[0];
+    var reader = new FileReader();
+    
+    reader.onload = function(event) {
+        var bmpData = new Uint8Array(event.target.result);
+        var headerInfo = parseBMPHeader(bmpData);
+        var hexArray = convertToHexArray(bmpData, headerInfo.dataOffset, headerInfo.imageWidth, headerInfo.imageHeight);
+
+        
+        document.getElementById('bmpInfo').innerText = JSON.stringify(headerInfo, null, 4);
+        document.getElementById('imageInput').value = hexArray.join(',');
+        document.getElementById('imageHeight').value = headerInfo.imageHeight;
+        document.getElementById('imageWidth') .value = headerInfo.imageWidth;
+    };
+    
+    reader.readAsArrayBuffer(file);
+});
       const canvas = document.getElementById('imageCanvas');
       const ctx = canvas.getContext('2d');
 
-      
-      document.addEventListener('DOMContentLoaded', function() {
-        const imageDataInput = document.getElementById('imageInput').value;
-        // Add an event listener for the 'input' event
-        imageInput.addEventListener('input', function(event) {
-          // This function will be called whenever the content of the textarea changes, including pasting
-          console.log('Text pasted or input changed');
-          // Call your additional function here
-          // For example:
-          processPastedText(imageInput.value);
-        });
-        // Add your logic to handle the pasted text here
-        // For example, you can perform some processing or validation
-      });
-      // Additional function to process pasted text
-      function processPastedText(pastedText) {
-        if (pastedText.includes('_HEIGHT')) {
-          const heightMatch = pastedText.match(/HEIGHT (\d+)/);
-          document.getElementById('imageHeight').value = heightMatch ? parseInt(heightMatch[1], 10) : null;
-        }
-        if (pastedText.includes('_WIDTH')) {
-          const heightMatch = pastedText.match(/WIDTH (\d+)/);
-          document.getElementById('imageWidth').value = heightMatch ? parseInt(heightMatch[1], 10) : null;
-        }
-      }
+    
 
       function copyToClipboard() {
         const consoleOutput = document.getElementById('consoleOutput');
@@ -202,15 +223,15 @@ byte displayImage[]  = {
       function convertAndDisplay(grayImage, width, height, appendLog) {
         const byteSize = (width * height) / 4;
         const fourPixelByte = new Uint8Array(byteSize);
-        const rawImageSize = width * height;
+        const rawImageSize = width/2 * height;
         let byteIndex = 0;
-        //combine 4 byte 4 pixel to 1 byte 4 pixel
-        for (let i = 0; i < rawImageSize; i += 4) {
-          const twoBit4 = grayImage[i] >> 6 & 0b00000011;
-          const twoBit3 = grayImage[i + 1] >> 4 & 0b00000011;
-          const twoBit2 = grayImage[i + 2] >> 2 & 0b00000011;
-          const twoBit1 = grayImage[i + 3] & 0b00000011;
-          fourPixelByte[byteIndex] = 255 - (twoBit1 | (twoBit2 << 2) | (twoBit3 << 4) | (twoBit4 << 6));
+        //combine 2 byte 4 pixel to 1 byte 4 pixel
+        for (let i = 0; i < rawImageSize; i += 2) {
+          const twoBit3 = grayImage[i] >> 4 & 0b00001111;
+          const twoBit2 = grayImage[i] & 0b00001111;
+          const twoBit1 = grayImage[i + 1] >> 4 & 0b00001111;
+          const twoBit0 = grayImage[i + 1] & 0b00001111;
+          fourPixelByte[byteIndex] = 255 - (twoBit0 | (twoBit1 << 2) | (twoBit2 << 4) | (twoBit3 << 6));
           appendLog(`0x${fourPixelByte[byteIndex].toString(16).padStart(2, '0')}`);
           byteIndex++;
           const fractionalPart = byteIndex % (width / 4);
@@ -252,7 +273,11 @@ byte displayImage[]  = {
             //  console.log(index);
           }
         }
+        
       }
+
+
+
     </script>
   </body>
 </html>
