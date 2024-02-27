@@ -257,17 +257,17 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
         let index = 0;
         for (let y = 0; y < height; y++) {
           for (let x = 0; x < width; x = x + 4) { //split 8 bit to 2 bit x 4 bytes
-            let pixelValue = 255 - (imageData[index] & 0b11000000); //select first 2 MSB
-            ctx.fillStyle = `rgb(${pixelValue}, ${pixelValue}, ${pixelValue})`; //apply color
+            let pixelValue = (imageData[index] >> 6 & 0b11); //select first 2 MSB
+            ctx.fillStyle = getHexColorFrom2BitGray(pixelValue);
             ctx.fillRect(x * 4, y * 4, 4, 4); //plot first left most pixel
-            pixelValue = 255 - (imageData[index] << 2 & 0b11000000); //shift 2 and select first 2 MSB
-            ctx.fillStyle = `rgb(${pixelValue}, ${pixelValue}, ${pixelValue})`;
+            pixelValue = (imageData[index] >> 4 & 0b11); //shift 2 and select first 2 MSB
+            ctx.fillStyle =  getHexColorFrom2BitGray(pixelValue);
             ctx.fillRect((x + 1) * 4, y * 4, 4, 4);
-            pixelValue = 255 - (imageData[index] << 4 & 0b11000000);
-            ctx.fillStyle = `rgb(${pixelValue}, ${pixelValue}, ${pixelValue})`;
+            pixelValue =  (imageData[index] >> 2 & 0b11);
+            ctx.fillStyle =  getHexColorFrom2BitGray(pixelValue);
             ctx.fillRect((x + 2) * 4, y * 4, 4, 4);
-            pixelValue = 255 - (imageData[index] << 4 & 0b11000000);
-            ctx.fillStyle = `rgb(${pixelValue}, ${pixelValue}, ${pixelValue})`;
+            pixelValue = (imageData[index] & 0b11);
+            ctx.fillStyle =  getHexColorFrom2BitGray(pixelValue);
             ctx.fillRect((x + 3) * 4, y * 4, 4, 4); //plot right most pixel
             index++;
             //  console.log(index);
@@ -275,8 +275,31 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
         }
         
       }
+//function transform 2 bit gray to css color
+ function getHexColorFrom2BitGray(grayValue) {
+    let color;
+     
+    switch (grayValue) {
+        case 0b11://ipod black
+            color = "#000000"; // Black
+            break;
+        case 0b10://ipod dark gray
+            color = "#555555"; // Dark gray
+            break;
+        case 0b01://ipod light gray
+            color = "#AAAAAA"; // Light gray
+            break;
+        case 0b00://ipod no color
+            color = "#FFFFFF"; // White
+            break;
+        default:
+            // Handle invalid values
+            color = "#000000"; // Default to black
+            break;
+    }
 
-
+    return color;
+}
 
     </script>
   </body>
