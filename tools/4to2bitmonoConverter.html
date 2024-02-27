@@ -117,6 +117,9 @@
       background-color: #ffffff;
       color: black;
     }
+    #fileInput {
+        width: 300px; /* Set the width to your desired value */
+    }
     </style>
   </head>
   <body>
@@ -145,14 +148,23 @@
       <div class="border-frame">
         <legend> 2 bit/pixel grey image byte array output </legend>
         <textarea id="consoleOutput" rows="15" cols="50" placeholder="Conversion output will appear here..."></textarea>
+        <select id="scaleDropdown">
+          <option value="1">x1</option>
+          <option value="2">x2</option>
+          <option value="3">x3</option>
+          <option value="4">x4</option>
+        </select>
         <button onclick="showImage()">Draw Image</button>
         <button onclick="copyToClipboard()">Copy to Clipboard</button>
         <br>
         <canvas id="imageCanvas"></canvas>
       </div>
     </div>
-    <script>
-      
+
+<script>
+
+let draw_scale = 1;
+
 function parseBMPHeader(data) {
     var header = {};
     header.signature = String.fromCharCode(data[0], data[1]);
@@ -246,8 +258,9 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
       function showImage() {
         const width = document.getElementById('imageWidth').value;
         const height = document.getElementById('imageHeight').value;
-        canvas.width = width * 4;
-        canvas.height = height * 4;
+        canvas.width = width * draw_scale;
+        canvas.height = height * draw_scale;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         const byteArrayText = document.getElementById('consoleOutput').value.replaceAll(/\s/g, '');
         const stringArray = byteArrayText.split(',');
         const imageData = new Uint8Array(stringArray.length);
@@ -259,16 +272,16 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
           for (let x = 0; x < width; x = x + 4) { //split 8 bit to 2 bit x 4 bytes
             let pixelValue = (imageData[index] >> 6 & 0b11); //select first 2 MSB
             ctx.fillStyle = getHexColorFrom2BitGray(pixelValue);
-            ctx.fillRect(x * 4, y * 4, 4, 4); //plot first left most pixel
+            ctx.fillRect(x * draw_scale, y * draw_scale, draw_scale, draw_scale); //plot first left most pixel
             pixelValue = (imageData[index] >> 4 & 0b11); //shift 2 and select first 2 MSB
             ctx.fillStyle =  getHexColorFrom2BitGray(pixelValue);
-            ctx.fillRect((x + 1) * 4, y * 4, 4, 4);
+            ctx.fillRect((x + 1) * draw_scale, y * draw_scale, draw_scale, draw_scale);
             pixelValue =  (imageData[index] >> 2 & 0b11);
             ctx.fillStyle =  getHexColorFrom2BitGray(pixelValue);
-            ctx.fillRect((x + 2) * 4, y * 4, 4, 4);
+            ctx.fillRect((x + 2) * draw_scale, y * draw_scale, draw_scale, draw_scale);
             pixelValue = (imageData[index] & 0b11);
             ctx.fillStyle =  getHexColorFrom2BitGray(pixelValue);
-            ctx.fillRect((x + 3) * 4, y * 4, 4, 4); //plot right most pixel
+            ctx.fillRect((x + 3) * draw_scale, y * draw_scale, draw_scale, draw_scale); //plot right most pixel
             index++;
             //  console.log(index);
           }
@@ -301,6 +314,15 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     return color;
 }
 
-    </script>
-  </body>
+
+// Add event listener for scaleDropdown
+document.getElementById('scaleDropdown').addEventListener('change', function() {
+    // Get the selected scale factor
+    const selectedScale = parseInt(this.value);
+    draw_scale = selectedScale;
+
+});
+
+</script>
+</body>
 </html>
