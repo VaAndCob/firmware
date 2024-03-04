@@ -1,9 +1,8 @@
 https://vaandcob.github.io/firmware/tools/iPodMonochromeImageConverter.html
 
 iPod Monochrome Image Converter by Va&Cob
-This tool is for converting '4-bit GIMP bmp exported image to 2-bit color depth monochrome image byte array' for use with an old monochrome iPod display
-for use with old monochrome iPod display
 
+  This tool is for converting '4-bit GIMP bmp exported image to 2-bit color depth monochrome image byte array' for use with an old monochrome iPod display
 
 How to use: 
 Use GIMP app 
