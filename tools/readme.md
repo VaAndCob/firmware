@@ -1,4 +1,4 @@
-https://vaandcob.github.io/firmware/tools/Mono2bitConverter.html
+https://vaandcob.github.io/firmware/tools/iPodMonochromeImageConverter.html
 
 Monochrome 2-bit per pixel image to byte array converter by Va&Cob
 
