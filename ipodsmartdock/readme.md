@@ -55,3 +55,8 @@ VERSION CONTROL
 - Set gray display screen implemented
 - Accessories improved
 - Minor bug fixed
+
+2.1.3
+- Color display screen implemented
+- Menu navigation bug fixed
+- Theme color fixed
