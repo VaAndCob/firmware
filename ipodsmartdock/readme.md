@@ -60,3 +60,7 @@ VERSION CONTROL
 - Color display screen implemented
 - Menu navigation bug fixed
 - Theme color fixed
+
+2.1.4 (April 5th, 2024)
+- Genre menu added
+- Minor bug fixed
