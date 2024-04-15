@@ -64,3 +64,6 @@ VERSION CONTROL
 2.1.4 (April 5th, 2024)
 - Genre menu added
 - Minor bug fixed
+
+2.1.5
+- Power state display added
