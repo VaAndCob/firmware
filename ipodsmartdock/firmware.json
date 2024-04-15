@@ -1,8 +1,8 @@
 {
-  "version": "2.1.4",
-  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_4.bin",
+  "version": "2.1.5",
+  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_5.bin",
   "detail": [
-  "- Genre menu added",
+  "- Power state display added",
   "- Minor bug fixed"
   ]
 }
