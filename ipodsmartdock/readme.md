@@ -67,3 +67,9 @@ VERSION CONTROL
 
 2.1.5
 - Power state display added
+- Terminal theme added
+- VT220 Font added
+
+2.1.6
+- Remove Chulajaruek font
+- New playing screen
