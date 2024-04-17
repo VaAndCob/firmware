@@ -1,8 +1,11 @@
 {
-  "version": "2.1.5",
-  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_5.bin",
+  "version": "2.1.6",
+  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_6.bin",
   "detail": [
-  "- Power state display added",
-  "- Minor bug fixed"
+    "- Power state display added",
+    "- Terminal theme added",
+    "- VT220 Font added",
+    "- Remove Chulajaruek font",
+    "- New playing screen"    
   ]
 }
