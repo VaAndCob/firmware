@@ -134,7 +134,7 @@
     
     <div class="container">
       <div class="border-frame">
-        <p> How to use: Use GIMP app (set mode color palette 2 bit + flip vertical and export as .BMP)<br><br>
+        <p> How to use: Use GIMP app (set mode color palette 2 bit export as .BMP)<br><br>
           <a href = "https://vaandcob.github.io/firmware/tools/2-bit-grayscale.gpl">Download 2-bit monochrome color palette</a>
         
         </p>
@@ -237,27 +237,38 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
 
       function convertAndDisplay(grayImage, width, height, appendLog) {
         const byteSize = (width * height) / 4;
-        const fourPixelByte = new Uint8Array(byteSize);
+        const fourPixelByte = new Uint8Array(byteSize); 
         const rawImageSize = width/2 * height;
-        let byteIndex = 0;
+       // let byteIndex = 0;
+        let row = height;
+        let byteIndex = width* (row -1) /4;
+     
         //combine 2 byte 4 pixel to 1 byte 4 pixel
-        for (let i = 0; i < rawImageSize; i += 2) {
+        for (let i = 0; i < rawImageSize; i += 2) {//from bottom-left
           const twoBit3 = grayImage[i] >> 4 & 0b00001111;
           const twoBit2 = grayImage[i] & 0b00001111;
           const twoBit1 = grayImage[i + 1] >> 4 & 0b00001111;
           const twoBit0 = grayImage[i + 1] & 0b00001111;
           //combine 4 of 2 bit into 1 byte
           fourPixelByte[byteIndex] = 255 - (twoBit0 | (twoBit1 << 2) | (twoBit2 << 4) | (twoBit3 << 6));
-          appendLog(`0x${fourPixelByte[byteIndex].toString(16).padStart(2, '0')}`);
-          byteIndex++;
-          const fractionalPart = byteIndex % (width / 4);
-          if (fractionalPart !== 0.0) {
-            if (byteIndex < byteSize) appendLog(",");
-          } else {
-            if (byteIndex < byteSize) appendLog(",\n");
+          byteIndex++;//next new image byte
+          //if 1 row pass then move to upper row 
+          if (byteIndex % (width / 4) == 0.0) {
+            row--;
+            byteIndex = width* (row -1) /4;
           }
-        }
-      }
+        }//for
+        //create byte array log for new image
+        for (let i = 0; i< byteSize; i++) {
+          appendLog(`0x${fourPixelByte[i].toString(16).padStart(2, '0')}`);
+          const fractionalPart = i % (width / 4);
+          if (fractionalPart !== 0.0) appendLog(",");//add comma
+          else appendLog(",\n");//add new line
+    
+         }//for
+      }//convertAndDisplay
+        
+    
 
       function showImage() {
         const width = document.getElementById('imageWidth').value;
