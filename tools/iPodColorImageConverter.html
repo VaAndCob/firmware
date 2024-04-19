@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iPod Color Image Converter by Va&amp;Cob</title>
+<style>
+   body {
+        font-family: 'Arial', sans-serif;
+        background-color: navajowhite;
+        margin: 0;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+  img {
+    max-width: 400px;
+    max-height: 400px;
+  }
+  .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .border-frame {
+        border: 2px solid #333;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 10px;
+        width: 90%;
+        height: 80vh;
+        box-sizing: border-box;
+        overflow: auto;
+      }
+      .container .border-frame #bmpInfo {
+       text-align: left;
+      padding: 10px;
+        }
+
+      canvas {
+        border: 2px solid #333;
+        margin: 10px 0;
+      }
+
+      label,
+      input,
+      textarea {
+        display: inline-block;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+      }
+
+      label {
+        text-align: left;
+        padding: 10px;
+      }
+
+      input {
+        width: 15%;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        /* Other styles for textarea */
+      }
+
+      .border-frame textarea {
+        width: 100%;
+        box-sizing: border-box;
+        /* Other styles for textarea */
+      }
+      .button-container {
+      display: flex;
+      justify-content: center; /* Align items horizontally */
+      margin-top: 20px; /* Adjust as needed */
+    }
+
+    .button-container .tile {
+      background-color: #000000;
+      color: white;
+      padding: 10px;
+      margin: 0 5px; /* Adjust spacing between tiles */
+      cursor: pointer;
+    }
+
+    /* Define different colors for different tiles */
+    .button-container .tile:nth-child(2) {
+      background-color: #555555;
+    }
+
+    .button-container .tile:nth-child(3) {
+      background-color: #aaaaaa;
+    }
+
+    .button-container .tile:nth-child(4) {
+      background-color: #ffffff;
+      color: black;
+    }
+    #fileInput {
+        width: 300px; /* Set the width to your desired value */
+    }
+</style>
+</head>
+<body>
+  <h2>iPod Color Image Converter by Va&amp;Cob</h2>This tool is for converting 'color image to RGB565 big endian byte array' to use with an old iPod color display<br>
+  <div class="border-frame">
+  <input type="file" id="imageInput" accept="image/jpeg, image/png">
+  <br>
+  <img id="selectedImage" alt="Selected Image">
+  <br>
+  <p id="imageInfo"></p>
+  <br>
+  <label for="sizeOptions">Select Size:</label>
+  <select id="sizeOptions">
+    <option value="220x110">220 x 110</option>
+    <option value="128x64">128 x 64</option>
+  </select>
+  <button onclick="convertAndDisplay()">Scale and Convert</button>
+  <br>
+  <textarea id="rawData" rows="10" cols="50"></textarea>
+  <br>
+  <label id="convertedImageData">Total Converted Image Byte Count = </label>
+  <br>
+
+  <button onclick="copyToClipboard()">Copy to Clipboard</button>
+ 
+  <br>
+  <canvas id="convertedCanvas" style="display:none;"></canvas>
+  <br>
+  <img id="displayImage" alt="Converted Image">
+  </div>
+
+  <script>
+
+    function copyToClipboard() {
+        const consoleOutput = document.getElementById('rawData');
+        consoleOutput.select();
+        document.execCommand('copy');
+        alert('Copied to clipboard!');
+    }
+
+    function convertAndDisplay() {
+    var rawdatacount = 0;
+      var img = document.getElementById('selectedImage');
+      var sizeOption = document.getElementById('sizeOptions').value.split('x');
+      var width = parseInt(sizeOption[0]);
+      var height = parseInt(sizeOption[1]);
+
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+
+      var imageData = ctx.getImageData(0, 0, width, height);
+      var data = imageData.data;
+      var rawData = [];
+      for (var i = 0; i < data.length; i += 4) {
+        var r = data[i];
+        var g = data[i + 1];
+        var b = data[i + 2];
+        // Convert RGB values to 16-bit
+        var rgb16 = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
+        // Convert to big endian and format to 0x00
+        var hexMSB = ((rgb16 >> 8) & 0xFF).toString(16).padStart(2, '0');
+        var hexLSB = (rgb16 & 0xFF).toString(16).padStart(2, '0');
+        // Push the formatted bytes to the raw data array
+        rawData.push('0x' + hexMSB);
+        rawData.push(', 0x' + hexLSB);
+        rawdatacount +=2;
+        // Check if it's the last pixel of the row
+        if ((i / 4 + 1) % width === 0 && i !== data.length - 4) {
+          rawData.push(',\n'); // Add a comma and new line
+        } else {
+          rawData.push(', '); // Add comma and space
+        }
+      }
+      document.getElementById('rawData').value = rawData.join('');
+
+          // Display total converted image byte count
+    document.getElementById('convertedImageData').innerText = "Total Converted Image Byte Count = " + rawdatacount;
+    displayConverted();
+
+    }
+
+function displayConverted() {
+    const textData = document.getElementById('rawData').value.replaceAll(/\s/g, '');//remove space and newline
+    const rawData = textData.split(',');
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    var sizeOption = document.getElementById('sizeOptions').value.split('x');
+    var width = parseInt(sizeOption[0]);
+    var height = parseInt(sizeOption[1]);
+    canvas.width = width;
+    canvas.height = height;
+    var imageData = ctx.createImageData(width, height);
+    var data = imageData.data;
+    var i = 0;
+        // Convert back to 16-bit RGB
+    for (var j= 0;j<width*2*height;j +=2) {
+        
+        var rgb16 = (parseInt(rawData[j], 16) << 8) | parseInt(rawData[j + 1], 16);
+        // Convert to 8-bit
+        var r = (rgb16 & 0xF800) >> 8; // 5 bits for R
+        var g = (rgb16 & 0x07E0) >> 3; // 6 bits for G
+        var b = (rgb16 & 0x001F) << 3; // 5 bits for B
+        data[i] = r
+        data[i + 1] = g
+        data[i + 2] = b
+        data[i + 3] = 255; // Alpha channel
+        i = i+4;
+    }
+    ctx.putImageData(imageData, 0, 0);
+    var convertedImage = canvas.toDataURL('image/jpeg');
+    var displayImage = document.getElementById('displayImage');
+    displayImage.src = convertedImage;
+    displayImage.style.width = width + 'px'; // Set width of the displayed image
+    displayImage.style.height = height + 'px'; // Set height of the displayed image
+}
+
+
+
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+      var file = e.target.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(e) {
+          var image = new Image();
+          image.src = e.target.result;
+          image.onload = function() {
+            var width = this.width;
+            var height = this.height;
+            document.getElementById('selectedImage').src = this.src;
+            document.getElementById('imageInfo').textContent = 'Image Size (WxH): ' + width + ' x ' + height + ' px';
+          };
+        };
+      }
+    });
+  </script>
+</body>
+</html>
