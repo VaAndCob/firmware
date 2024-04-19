@@ -7,7 +7,7 @@
     <style>
       body {
         font-family: 'Arial', sans-serif;
-        background-color: #f4f4f4;
+        background-color: navajowhite;
         margin: 0;
         text-align: center;
         padding: 20px;
@@ -244,7 +244,8 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
         let byteIndex = width* (row -1) /4;
      
         //combine 2 byte 4 pixel to 1 byte 4 pixel
-        for (let i = 0; i < rawImageSize; i += 2) {//from bottom-left
+        //BMP image read from bottom -> top, left -> right
+        for (let i = 0; i < rawImageSize; i += 2) {
           const twoBit3 = grayImage[i] >> 4 & 0b00001111;
           const twoBit2 = grayImage[i] & 0b00001111;
           const twoBit1 = grayImage[i + 1] >> 4 & 0b00001111;
@@ -252,15 +253,16 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
           //combine 4 of 2 bit into 1 byte
           fourPixelByte[byteIndex] = 255 - (twoBit0 | (twoBit1 << 2) | (twoBit2 << 4) | (twoBit3 << 6));
           byteIndex++;//next new image byte
-          //if 1 row pass then move to upper row 
+          //if 1 row pass then move to upper row until row 0
           if (byteIndex % (width / 4) == 0.0) {
             row--;
             byteIndex = width* (row -1) /4;
           }
         }//for
         //create byte array log for new image
+        //Top -> bottom, left -> right
         for (let i = 0; i< byteSize; i++) {
-          appendLog(`0x${fourPixelByte[i].toString(16).padStart(2, '0')}`);
+          appendLog(`0x${fourPixelByte[i].toString(16).padStart(2, '0')}`);//show in textbox
           const fractionalPart = i % (width / 4);
           if (fractionalPart !== 0.0) appendLog(",");//add comma
           else appendLog(",\n");//add new line
