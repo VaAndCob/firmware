@@ -40,7 +40,7 @@ VERSION CONTROL
 2.1.0 (Jan 18th, 2024)
 - 3 Thai fonts added
 - Accessories menu implemented
-- Continue navigating & control if the iPod is connected implemented
+- Continue navigating & control if the iPod is connected and implemented
 - Connection stability & Smartphone touching improved
 
 2.1.1 (Jan 29th, 2024)
@@ -52,14 +52,14 @@ VERSION CONTROL
 - Minor bug fixed
   
 2.1.2 (Feb 12th, 2024)
-- Set gray display screen implemented
+- Set grey display screen implemented
 - Accessories improved
 - Minor bug fixed
 
 2.1.3 (Feb 24th, 2024)
 - Color display screen implemented
 - Menu navigation bug fixed
-- Theme color fixed
+- Theme colour fixed
 
 2.1.4 (April 5th, 2024)
 - Genre menu added
@@ -73,3 +73,9 @@ VERSION CONTROL
 2.1.6
 - Remove Chulajaruek font
 - New playing screen
+
+2.1.7
+- OK button to view lyrics on now playing screen
+- New iPod visual design
+- Touching precision improved
+- Connection stability improved
