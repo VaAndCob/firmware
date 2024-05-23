@@ -1,10 +1,8 @@
 {
-  "version": "2.1.7",
-  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_7.bin",
+  "version": "2.1.8",
+  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_8.bin",
   "detail": [
-    "- OK button to view lyrics on now playing screen",
-    "- New iPod visual design",
-    "- Touching precision improved",
-    "- Connection stability improved"
+      "- Connect and crashed on mobile phone fixed",
+      "- First page load speed improved.",
   ]
 }
