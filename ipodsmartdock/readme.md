@@ -82,4 +82,4 @@ VERSION CONTROL
 
 2.1.8
 - Connect and crashed on mobile phone fixed
-- First load speed improved.
+- First page load speed improved.
