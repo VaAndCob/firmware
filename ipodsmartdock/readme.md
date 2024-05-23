@@ -79,3 +79,7 @@ VERSION CONTROL
 - New iPod visual design
 - Touching precision improved
 - Connection stability improved
+
+2.1.8
+- Connect and crashed on mobile phone fixed
+- First load speed improved.
