@@ -65,21 +65,21 @@ VERSION CONTROL
 - Genre menu added
 - Minor bug fixed
 
-2.1.5
+2.1.5 (April 15th, 2024)
 - Power state display added
 - Terminal theme added
 - VT220 Font added
 
-2.1.6
+2.1.6 (May 14th, 2024)
 - Remove Chulajaruek font
 - New playing screen
 
-2.1.7
+2.1.7 (May 22th, 2024)
 - OK button to view lyrics on now playing screen
 - New iPod visual design
 - Touching precision improved
 - Connection stability improved
 
-2.1.8
+2.1.8 (May 24rh, 2024)
 - Connect and crashed on mobile phone fixed
 - First page load speed improved.
