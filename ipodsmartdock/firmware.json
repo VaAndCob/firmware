@@ -1,8 +1,10 @@
 {
-  "version": "2.1.8",
-  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_8.bin",
+  "version": "2.1.9",
+  "url": "https://vaandcob.github.io/firmware/ipodsmartdock/iPodSmartDock_2_1_9.bin",
   "detail": [
-      "- Connect and crashed on mobile phone fixed",
-      "- First page load speed improved."
+      "- Comnic, Matrix font added",
+      "- iPod connected state bug fixed",
+      "- Status bar bug fixed",
+      "- System files management"
   ]
 }
