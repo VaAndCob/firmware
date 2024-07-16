@@ -80,6 +80,12 @@ VERSION CONTROL
 - Touching precision improved
 - Connection stability improved
 
-2.1.8 (May 24rh, 2024)
+2.1.8 (May 24th, 2024)
 - Connect and crashed on mobile phone fixed
 - First page load speed improved.
+  
+2.1.9 (June 16th, 2024)
+- Comic, Matrix font added
+- iPod connected state bug fixed
+- Status bar bug fixed
+- System files management
