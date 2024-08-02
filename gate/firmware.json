@@ -1,8 +1,8 @@
 {
   "version": "0.2.2",
-  "url": "https://vaandcob.github.io/firmware/gate/Gate_0_2_1.bin",
+  "url": "https://gateapp.app/admin?key1=firmware&key2=get&key3=Gate_0_2_2.bin",
   "detail": [
-      "- แก้ไขบั๊ก",
-      "- ไม่แก้ละ เยอะเกิีน"
+      "- move to gateapp server",
+      "- set check interval time to 24 hr"
   ]
 }
