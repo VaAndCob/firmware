@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <title>Admin Database Viewer</title>
+    <style>
+        :root {
+            --background-color: #2e2e2e;
+            --text-color: white;
+            --input-bg-color: #111111;
+            --input-text-color: #e0e0e0;
+            --border-color: #fff;
+            --table-bg-color: #2e2e2e;
+            --table-header-bg-color: #555;
+            --log-bg-color: #3e3e3e;
+        }
+
+        body {
+            font-family: Arial, 'Courier New', Courier, monospace;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: row;
+        }
+
+        .sidebar {
+            width: 150px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            background-color: var(--log-bg-color);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 14px;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .sidebar h1 {
+            font-size: 16px;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        .sidebar select,
+        .sidebar button,
+        .sidebar input[type="range"] {
+            width: 100%;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            height: 30px;
+        }
+
+        .sidebar button {
+            background-color: var(--input-bg-color);
+            color: var(--input-text-color);
+            border: 1px solid var(--border-color);
+            border: none;
+            cursor: pointer;
+        }
+
+        .sidebar button:hover,
+        .sidebar button:active,
+        .sidebar button:focus {
+            background-color: var(--text-color);
+            color: var(--background-color);
+        }
+
+        .database-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+            flex-direction: column;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+            width: 100%
+        }
+
+        .table-container {
+            margin-left: 160px;
+            padding: 0px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+            /* Slightly larger font size for table */
+            white-space: nowrap;
+        }
+
+        th,
+        td {
+            border: 1px solid #555;
+            padding: 12px;
+            text-align: center;
+            color: var(--text-color);
+            background-color: var(--log-bg-color);
+        }
+
+        th {
+            background-color: var(--table-header-bg-color);
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 20px;
+        }
+
+        tr:hover {
+            background-color: lightslategray;
+        }
+
+        h2 {
+            margin-left: 50px;
+            color: var(--text-color);
+
+        }
+
+        .log-container {
+            white-space: pre-wrap;
+            background-color: var(--log-bg-color);
+            padding: 0px;
+            border: 1px solid #555;
+            /* Dark border for logs */
+            font-size: 14px;
+            overflow-x: auto;
+            border-radius: 4px;
+            /* Consistent border radius */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            /* Subtle shadow for depth */
+            height: 95%;
+        }
+
+        .table-wrapper {
+            background-color: var(--log-bg-color);
+
+        }
+
+        #table-data {
+            max-height: 100vh;
+            overflow-y: auto;
+            border: 1px solid #555;
+            /* Dark border for table data */
+            padding: 0px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            /* Consistent border radius */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            line-height: 1.6;
+        }
+
+        #loading-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            /* Positioning absolute within relative container */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Center the spinner */
+            font-size: 8em;
+            color: var(--text-color);
+        }
+
+        /* Light Theme */
+        .light-theme {
+            --background-color: #eee;
+            --text-color: black;
+            --input-bg-color: #fff;
+            --input-text-color: #222;
+            --border-color: #bbb;
+            --table-bg-color: #fff;
+            --table-header-bg-color: #eee;
+            --log-bg-color: #fff;
+        }
+
+        .light-theme body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .light-theme input,
+        .light-theme button {
+            background-color: var(--input-bg-color);
+            color: var(--input-text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .light-theme .table-wrapper {
+            background-color: var(--table-header-bg-color);
+        }
+
+        .light-theme th {
+            background-color: var(--table-header-bg-color);
+        }
+
+        .light-theme .log-container {
+            background-color: var(--log-bg-color);
+        }
+    </style>
+</head>
+
+<body>
+    ∏<div class="sidebar">
+        <h1>DB Viewer</h1>
+        <button id="theme-toggle">Toggle Theme</button>
+        Font Size
+        <input type="range" id="font-size-control" name="font-size-control" min="8" max="18" value="12" step="1" />
+
+        <label for="server-dropdown">Select Server</label>
+        <select id="server-dropdown">
+            <option value="https://wls.nstda.or.th">nstda.or.th</option>
+            <option value="https://gateapp.app">gateapp.app</option>
+        </select>
+        <button id="sanitize"><i class="fas fa-broom"></i> Sanitize</button>
+        <div class="database-buttons">
+        Database
+        <button data-db="UserDeviceDB.db">User</button>
+        <button data-db="DeviceGateDB.db">Gate MQTT</button>
+        <button data-db="DeviceMedloggerDB.db">Medlogger MQTT</button>
+        <button data-db="MedloggerEventDB.db">Medlogger EVENT</button>
+        <button data-db="MedloggerHistoryDB.db">Medlogger HISTORY</button>
+        App Log File
+        <div class="button-group">
+            <button data-db="app.log">App</button>
+            <button data-db="app-error.log">Error</button>
+        </div>
+        <div class="button-group">
+            <button data-db="broker.log">Broker</button>
+            <button data-db="broker-error.log">Error</button>
+        </div>
+        <div class="button-group">
+            <button data-db="father.log">Father</button>
+            <button data-db="father-error.log">Error</button>
+        </div>
+        <div class="button-group">
+            <button data-db="modeler.log">Modeler</button>
+            <button data-db="modeler-error.log">Error</button>
+        </div>
+        </div>
+
+    </div>
+    <div id="loading-icon" class="loading-icon" style="display: block;">
+        <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    <div id="table-data" class="table-container">
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+    <script>
+        document.querySelectorAll('.database-buttons button').forEach(button => {
+            button.addEventListener('click', async () => {
+                const dbFile = button.getAttribute('data-db');
+                await loadDatabase(dbFile);
+            });
+        });
+
+        document.getElementById('sanitize').addEventListener('click', sanitizeDatabase);
+
+        async function sanitizeDatabase() {
+            const serverSelect = document.getElementById('server-dropdown');
+            const serverIP = serverSelect.options[serverSelect.selectedIndex].value;
+            const dbFile = document.querySelector('.database-buttons button.active')?.getAttribute('data-db') || '';
+            const baseUrl = `${serverIP}/admin?key1=database&key2=sanitize&key3=${dbFile}`;
+
+            try {
+                const response = await fetch(baseUrl);
+                const data = await response.json(); // Parse response as JSON
+
+                if (data && data.message) {
+                    alert(data.message);
+                } else {
+                    alert('Unexpected response from server');
+                }
+            } catch (error) {
+                console.error('Error sanitizing database:', error);
+                alert('Failed to sanitize database');
+            }
+        }
+
+        async function loadDatabase(dbFile) {
+
+            document.getElementById('loading-icon').style.display = 'block';
+            const serverSelect = document.getElementById('server-dropdown');
+            const serverIP = serverSelect.options[serverSelect.selectedIndex].value;
+            const baseUrl = dbFile.includes('.db')
+                ? `${serverIP}/admin?key1=database&key2=get&key3=${dbFile}`
+                : `${serverIP}/admin?key1=logs&key2=get&key3=${dbFile}`;
+
+            try {
+                const response = await fetch(baseUrl);
+                const arrayBuffer = await response.arrayBuffer();
+                document.getElementById('loading-icon').style.display = 'none';
+
+                if (dbFile.includes('.log')) {
+                    displayLogFile(new TextDecoder().decode(arrayBuffer));
+                    return;
+                }
+
+                const uInt8Array = new Uint8Array(arrayBuffer);
+                const SQL = await initSqlJs({
+                    locateFile: (file) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}`,
+                });
+                const db = new SQL.Database(uInt8Array);
+                const tablesResult = db.exec("SELECT name FROM sqlite_master WHERE type='table'");
+                const tables = tablesResult[0]?.values.map((row) => row[0]) || [];
+                displayTables(tables, db);
+            } catch (error) {
+                console.error('Error loading database:', error);
+                alert('Failed to load database');
+            }
+        }
+
+        function displayTables(tables, db) {
+            const tableDataDiv = document.getElementById('table-data');
+            tableDataDiv.innerHTML = '';
+
+            tables.forEach((table, index) => {
+                const tableWrapper = document.createElement('div');
+                tableWrapper.className = 'table-wrapper';
+
+                if (tables.length === 1) {
+                    tableWrapper.classList.add('full-width');
+                }
+
+                const recordCountResult = db.exec(`SELECT COUNT(*) FROM ${table}`);
+                const recordCount = recordCountResult[0]?.values[0][0] || 0;
+
+                const tableTitle = document.createElement('h2');
+                tableTitle.textContent = `${table} (${recordCount} records)`;
+                tableWrapper.appendChild(tableTitle);
+
+                let tableData;
+                if (table === 'message' || table === 'table_device_event') {
+                    tableData = db.exec(`SELECT * FROM ${table} ORDER BY created DESC`)[0];
+                } else if (table === 'table_device_history') {
+                    tableData = db.exec(`SELECT * FROM ${table} ORDER BY event_start DESC`)[0];
+                } else  {
+                    tableData = db.exec(`SELECT * FROM ${table}`)[0];
+                }
+
+                if (!tableData) {
+                    tableWrapper.innerHTML += '<p>No data available</p>';
+                    tableDataDiv.appendChild(tableWrapper);
+                    return;
+                }
+
+                const columns = tableData.columns;
+                const values = tableData.values;
+
+                let html = '<table><thead><tr>';
+                columns.forEach((column) => {
+                    html += `<th>${column}</th>`;
+                });
+                html += '</tr></thead><tbody>';
+
+                values.forEach((row) => {
+                    html += '<tr>';
+                    row.forEach((cell) => {
+                        html += `<td>${cell}</td>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</tbody></table>';
+
+                tableWrapper.innerHTML += html;
+                tableDataDiv.appendChild(tableWrapper);
+            });
+
+            const fontSize = document.getElementById('font-size-control').value + 'px';
+            changeFontSize(fontSize);
+        }
+
+        function displayLogFile(logContent) {
+            const tableDataDiv = document.getElementById('table-data');
+            tableDataDiv.innerHTML = '';
+
+            const logContainer = document.createElement('div');
+            logContainer.className = 'log-container';
+            logContainer.textContent = logContent;
+
+            tableDataDiv.appendChild(logContainer);
+
+            const fontSize = document.getElementById('font-size-control').value + 'px';
+            changeFontSize(fontSize);
+        }
+
+        document.getElementById('font-size-control').addEventListener('input', function () {
+            const fontSize = this.value + 'px';
+            changeFontSize(fontSize);
+        });
+
+        function changeFontSize(fontSize) {
+            const tables = document.querySelectorAll('table');
+            tables.forEach((table) => {
+                table.style.fontSize = fontSize;
+            });
+            const logs = document.querySelectorAll('.log-container');
+            logs.forEach((log) => {
+                log.style.fontSize = fontSize;
+            });
+        }
+
+        document.getElementById('theme-toggle').addEventListener('click', function () {
+            document.body.classList.toggle('light-theme');
+        });
+    </script>
+</body>
+
+</html>
