@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Device Factory Setup</title>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <meta name="referrer" content="no-referrer">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 16px;
+        }
+
+        .content {
+            max-width: 400px;
+            padding: 20px;
+            background-color: lightgray;
+        }
+
+        .image-container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .camera-container{ 
+            padding: 20px;
+            max-width: 400px;
+            background-color: white;
+    
+        }
+
+        fieldset {
+            border: 2px solid black;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        legend {
+            font-weight: bold;
+            color: blue;
+        }
+
+        label {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        input[type='text'] {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            
+            
+        }
+
+        .button {
+            background-color: dodgerblue;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            display: block;
+            margin: auto;
+            text-align: center;
+        }
+
+
+        #qr-canvas {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+       button {
+            
+            background-color: dodgerblue;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            padding: 10px;
+       
+            display: flex;
+        
+        }
+
+        #save-image:hover,
+        #close-button:hover {
+            background-color: deepskyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='form' class="content">
+        <h1 style='color:black;text-align:center;font-size:24px;'><b>&#x2699; Device Factory Setup 2.0.0</b></h1>
+
+        <fieldset>
+            <legend>1. Setup parameters</legend> Device UUID
+            <input type='text' name='uuid' id='uuid' maxlength='36'
+                pattern='[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+                placeholder='00000000-0000-0000-0000-000000000000' value=''>
+            <div class="buttons">
+            <button onclick='scanQRCode()'>Scan QRCode</button>
+            <button onclick='generateUUID()'>Generate UUID</button>
+            </div>
+            <br>
+
+            <hr> Serial No
+            <input type='text' name='serialno' maxlength='16' value=''>
+            <br>
+
+            <button id="reset-button" class="button" onclick="resetForm()">&#x1F503; Reset</button>
+
+        </fieldset>
+
+        <fieldset>
+            <legend>2. QR Code</legend>
+            <div class="image-container">
+                <div id="qr-code">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="150" height="150"
+                        alt="Empty Image">
+                </div>
+                <label id='uuid-display'></label>
+                <button id='save-image' onclick="saveImage()">&#x1F4BE; Save Image</button>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>3. Flash Firmware</legend>
+            <div class='buttons'>
+                <esp-web-install-button manifest="gate.json">
+                    <button slot="activate">Gate</button>
+                    <span slot="unsupported">Ah snap, your browser doesn't work!</span>
+                    <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
+                </esp-web-install-button>
+
+                <esp-web-install-button manifest="medlogger.json">
+                    <button slot="activate">Medlogger</button>
+                    <span slot="unsupported">Ah snap, your browser doesn't work!</span>
+                    <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
+                </esp-web-install-button>
+            </div>
+        </fieldset>
+    </div>
+        <canvas id="qr-canvas" style="display: none;"></canvas>
+
+        <div class='camera-container' id='camera-dialog' style='display:none'> 
+            Show QR Code image in front of camera
+            <video id="cameraFeed" width="240" height="240" autoplay></video>
+            <br>
+            <button id='camera-close-button' onclick="closeCamera()">Close</button>
+        </div>
+    
+    <script src="https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module" src="install-button.js?module"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            form.addEventListener('submit', function (event) {
+                const uuid = document.getElementById('uuid').value;
+                console.log('UUID:', uuid);
+                showQRCODE(uuid);
+            });
+        });
+
+        function closeQR() {
+            document.getElementById('qr-code-container').style.display = 'none';
+        }
+
+        function showQRCODE(uuid) {
+            document.getElementById('qr-code').innerHTML = '';
+            var qrcode = new QRCode(document.getElementById('qr-code'), {
+                text: uuid,
+                width: 150,
+                height: 150,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            document.getElementById('uuid-display').innerText = uuid;
+        }
+
+        function saveImage() {
+            const uuidnumber = document.getElementById('uuid-display').innerText;
+            if (!uuidnumber) {
+                alert('UUID is empty\nPlease GENERATE or SCAN');
+                return;
+            }
+            var qrCodeCanvas = document.querySelector('#qr-code canvas');
+            qrCodeCanvas.toBlob(function (blob) {
+                var uuid = document.getElementById('uuid').value;
+                if (!uuid) {
+                    alert('UUID is empty\nPlease GENERATE or SCAN');
+                    return;
+                }
+                var downloadLink = document.createElement('a');
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.download = uuid + '.png';
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            }, 'image/png');
+        }
+
+        function generateUUID() {
+            var x = 'xxxxxxxx-xxxx-7765-6c6c-xxxxxxxxxxxx'.replace(/[xy]/g, function (x) {
+                var e = 16 * Math.random() | 0;
+                return ('x' == x ? e : 3 & e | 8).toString(16)
+            });
+            document.getElementById('uuid').value = x;
+            showQRCODE(x);
+        }
+
+        function resetForm() {
+            document.getElementById('uuid').value = '';
+            document.getElementById('uuid-display').innerText = '';
+            document.getElementById('qr-code').innerHTML = '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="150" height="150" alt="Empty Image">';
+        }
+
+        function closeCamera() {
+            const stream = document.getElementById('cameraFeed').srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                document.getElementById('camera-dialog').style.display = 'none';
+                document.getElementById('form').style.display = 'block';
+            }
+        }
+
+        async function scanQRCode() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Your browser does not support camera access.');
+                return;
+            }
+            try {
+                document.getElementById('form').style.display='none';
+                document.getElementById('uuid-display').innerText = '';
+                document.getElementById('qr-code').innerHTML = '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="150" height="150" alt="Empty Image">';
+                document.getElementById('camera-dialog').style.display = 'block';
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment' }
+                });
+                const video = document.getElementById('cameraFeed');
+                video.srcObject = stream;
+                decodeQRcode(stream);
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                alert('Error accessing camera: ' + error.message);
+            }
+        }
+
+        function decodeQRcode(stream) {
+            const video = document.getElementById('cameraFeed');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            console.log('Start scan');
+            function scan() {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    if (code) {
+                        document.getElementById('uuid').value = code.data;
+                        console.log('QR Code Data: ', code.data);
+                        document.getElementById('camera-dialog').style.display = 'none';
+                        document.getElementById('form').style.display = 'block';
+                    }
+                }
+                requestAnimationFrame(scan);
+            }
+            video.addEventListener('loadedmetadata', scan);
+            window.addEventListener('beforeunload', () => {
+                stream.getTracks().forEach(track => track.stop());
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+{
+    "name": "Gate",
+    "version": "1.3.2",
+    "new_install_prompt_erase": true,
+    "builds": [
+      {
+        "chipFamily": "ESP32",
+        "parts": [
+          { "path": "merged-firmware.bin", "offset": 0 },
+        ]
+      }
+    ]
+  }
