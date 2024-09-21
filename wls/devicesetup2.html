@@ -24,7 +24,7 @@
             background-color: lightgray;
         }
 
-        .image-container{
+        .image-container {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -32,11 +32,12 @@
             width: 100%;
             box-sizing: border-box;
         }
-        .camera-container{ 
+
+        .camera-container {
             padding: 20px;
             max-width: 400px;
             background-color: white;
-    
+
         }
 
         fieldset {
@@ -71,8 +72,8 @@
         .buttons {
             display: flex;
             justify-content: space-between;
-            
-            
+
+
         }
 
         .button {
@@ -95,17 +96,17 @@
             transform: translate(-50%, -50%);
         }
 
-       button {
-            
+        button {
+
             background-color: dodgerblue;
             color: white;
             border: none;
             border-radius: 3px;
             cursor: pointer;
             padding: 10px;
-       
+
             display: flex;
-        
+
         }
 
         #save-image:hover,
@@ -125,8 +126,8 @@
                 pattern='[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
                 placeholder='00000000-0000-0000-0000-000000000000' value=''>
             <div class="buttons">
-            <button onclick='scanQRCode()'>Scan QRCode</button>
-            <button onclick='generateUUID()'>Generate UUID</button>
+                <button onclick='scanQRCode()'>Scan QRCode</button>
+                <button onclick='generateUUID()'>Generate UUID</button>
             </div>
             <br>
 
@@ -167,21 +168,18 @@
             </div>
         </fieldset>
     </div>
-        <canvas id="qr-canvas" style="display: none;"></canvas>
+    <canvas id="qr-canvas" style="display: none;"></canvas>
 
-        <div class='camera-container' id='camera-dialog' style='display:none'> 
-            Show QR Code image in front of camera
-            <video id="cameraFeed" width="240" height="240" autoplay></video>
-            <br>
-            <button id='camera-close-button' onclick="closeCamera()">Close</button>
-        </div>
-    
+    <div class='camera-container' id='camera-dialog' style='display:none'>
+        Show QR Code image in front of camera
+        <video id="cameraFeed" width="240" height="240" autoplay></video>
+        <br>
+        <button id='camera-close-button' onclick="closeCamera()">Close</button>
+    </div>
+
     <script src="https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script
-  type="module"
-  src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"
-></script>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             form.addEventListener('submit', function (event) {
@@ -260,7 +258,7 @@
                 return;
             }
             try {
-                document.getElementById('form').style.display='none';
+                document.getElementById('form').style.display = 'none';
                 document.getElementById('uuid-display').innerText = '';
                 document.getElementById('qr-code').innerHTML = '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="150" height="150" alt="Empty Image">';
                 document.getElementById('camera-dialog').style.display = 'block';
