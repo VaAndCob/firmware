@@ -14,13 +14,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
             font-size: 16px;
         }
 
         .content {
-            width: 400px;
-            max-width: 400px;
+            display: flex;
+            width: auto;
+            height: 50%;
             padding: 20px;
             background-color: lightgray;
         }
@@ -70,24 +72,45 @@
             box-sizing: border-box;
         }
 
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-
-
-        }
-
-        .button {
+        button {
             background-color: dodgerblue;
-            color: #fff;
+            color: white;
             border: none;
-            padding: 8px 20px;
             border-radius: 3px;
             cursor: pointer;
-            display: block;
-            margin: auto;
-            text-align: center;
+            padding: 10px;
+            margin: 10px;
+            width: 100%;
+            /* Set the button to be 80% of its container's width */
+            box-sizing: border-box;
+            /* Ensure padding and borders are included in the width */
         }
+
+        .buttons-vertical {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+
+
+
+        }
+
+        .buttons-horizontal {
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+
+
+
+        }
+
+
 
 
         #qr-canvas {
@@ -97,18 +120,6 @@
             transform: translate(-50%, -50%);
         }
 
-        button {
-
-            background-color: dodgerblue;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            padding: 10px;
-
-            display: flex;
-
-        }
 
         #save-image:hover,
         #close-button:hover {
@@ -118,15 +129,33 @@
 </head>
 
 <body>
+
+    <h1 style='color: orangered;text-align:center;font-size:24px;'><b>&#x2699; Device Factory Setup 2.0.0</b></h1>
     <div id='form' class="content">
-        <h1 style='color:black;text-align:center;font-size:24px;'><b>&#x2699; Device Factory Setup 2.0.0</b></h1>
 
         <fieldset>
-            <legend>1. Setup parameters</legend> Device UUID
+            <legend>1. Initialize Device</legend>
+            <div class='buttons-vertical'>
+                <esp-web-install-button manifest="https://vaandcob.github.io/firmware/wls/gate.json">
+                    <button slot="activate">🚪 Gate</button>
+                    <span slot="unsupported">Ah snap, your browser doesn't work!</span>
+                    <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
+                </esp-web-install-button>
+
+                <esp-web-install-button manifest="https://vaandcob.github.io/firmware/wls/medlogger.json">
+                    <button slot="activate">💊 Medlogger</button>
+                    <span slot="unsupported">Ah snap, your browser doesn't work!</span>
+                    <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
+                </esp-web-install-button>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>2. Setup parameters</legend> Device UUID
             <input type='text' name='uuid' id='uuid' maxlength='36'
                 pattern='[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
                 placeholder='00000000-0000-0000-0000-000000000000' value=''>
-            <div class="buttons">
+            <div class="buttons-vertical">
                 <button onclick='scanQRCode()'>Scan QRCode</button>
                 <button onclick='generateUUID()'>Generate UUID</button>
             </div>
@@ -134,14 +163,16 @@
 
             <hr> Serial No
             <input type='text' name='serialno' maxlength='16' value=''>
+
             <br>
-
-            <button id="reset-button" class="button" onclick="resetForm()">&#x1F503; Reset</button>
-
+            <div class="buttons-horizontal">
+                <button class="button" onclick="resetForm()">&#x1F503; Reset</button>
+                <button class="button">&#x1F4BE; Save to device</button>
+            </div>
         </fieldset>
 
         <fieldset>
-            <legend>2. QR Code</legend>
+            <legend>3. QR Code</legend>
             <div class="image-container">
                 <div id="qr-code">
                     <img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="150" height="150"
@@ -153,16 +184,16 @@
         </fieldset>
 
         <fieldset>
-            <legend>3. Flash Firmware</legend>
-            <div class='buttons'>
+            <legend>4. Flash Firmware</legend>
+            <div class='buttons-vertical'>
                 <esp-web-install-button manifest="https://vaandcob.github.io/firmware/wls/gate.json">
-                    <button slot="activate">Gate</button>
+                    <button slot="activate">🚪 Gate</button>
                     <span slot="unsupported">Ah snap, your browser doesn't work!</span>
                     <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
                 </esp-web-install-button>
 
                 <esp-web-install-button manifest="https://vaandcob.github.io/firmware/wls/medlogger.json">
-                    <button slot="activate">Medlogger</button>
+                    <button slot="activate">💊 Medlogger</button>
                     <span slot="unsupported">Ah snap, your browser doesn't work!</span>
                     <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
                 </esp-web-install-button>
