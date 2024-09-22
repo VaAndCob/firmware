@@ -19,8 +19,9 @@
             font-size: 16px;
         }
 
-        .content {
+        #main {
             display: flex;
+            flex-direction: row;
             width: auto;
             height: 50%;
             padding: 20px;
@@ -38,8 +39,13 @@
 
         .camera-container {
             padding: 20px;
-            max-width: 400px;
+            width: 400px;
             background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
 
         }
 
@@ -130,8 +136,8 @@
 
 <body>
 
-    <h1 style='color: orangered;text-align:center;font-size:24px;'><b>&#x2699; Device Factory Setup 2.0.0</b></h1>
-    <div id='form' class="content">
+    <h1 style='color: orangered;text-align:center;font-size:24px;'><b>&#x2699; Device Factory Setup 2.0</b></h1>
+    <div id='main'>
 
         <fieldset>
             <legend>1. Initialize Device</legend>
@@ -156,8 +162,8 @@
                 pattern='[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
                 placeholder='00000000-0000-0000-0000-000000000000' value=''>
             <div class="buttons-vertical">
-                <button onclick='scanQRCode()'>Scan QRCode</button>
-                <button onclick='generateUUID()'>Generate UUID</button>
+                <button onclick='scanQRCode()'>📷 Scan QRCode</button>
+                <button onclick='generateUUID()'>🆔 Generate UUID</button>
             </div>
             <br>
 
@@ -206,7 +212,7 @@
         Show QR Code image in front of camera
         <video id="cameraFeed" width="240" height="240" autoplay></video>
         <br>
-        <button id='camera-close-button' onclick="closeCamera()">Close</button>
+        <button onclick="closeCamera()">Close</button>
     </div>
 
     <script src="https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"></script>
@@ -221,10 +227,6 @@
                 showQRCODE(uuid);
             });
         });
-
-        function closeQR() {
-            document.getElementById('qr-code-container').style.display = 'none';
-        }
 
         function showQRCODE(uuid) {
             document.getElementById('qr-code').innerHTML = '';
@@ -280,9 +282,10 @@
             const stream = document.getElementById('cameraFeed').srcObject;
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
-                document.getElementById('camera-dialog').style.display = 'none';
-                document.getElementById('form').style.display = 'block';
+         
             }
+            document.getElementById('camera-dialog').style.display = 'none';
+            document.getElementById('main').style.display = 'flex';
         }
 
         async function scanQRCode() {
@@ -291,10 +294,10 @@
                 return;
             }
             try {
-                document.getElementById('form').style.display = 'none';
+                document.getElementById('main').style.display = 'none';
                 document.getElementById('uuid-display').innerText = '';
                 document.getElementById('qr-code').innerHTML = '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="150" height="150" alt="Empty Image">';
-                document.getElementById('camera-dialog').style.display = 'block';
+                document.getElementById('camera-dialog').style.display = 'flex';
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: 'environment' }
                 });
@@ -302,6 +305,8 @@
                 video.srcObject = stream;
                 decodeQRcode(stream);
             } catch (error) {
+                document.getElementById('camera-dialog').style.display = 'none';
+                document.getElementById('main').style.display = 'flex';
                 console.error('Error accessing camera:', error);
                 alert('Error accessing camera: ' + error.message);
             }
@@ -323,7 +328,7 @@
                         document.getElementById('uuid').value = code.data;
                         console.log('QR Code Data: ', code.data);
                         document.getElementById('camera-dialog').style.display = 'none';
-                        document.getElementById('form').style.display = 'block';
+                        document.getElementById('main').style.display = 'flex';
                     }
                 }
                 requestAnimationFrame(scan);
