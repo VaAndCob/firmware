@@ -6,7 +6,7 @@
       {
         "chipFamily": "ESP32",
         "parts": [
-          { "path": "merged-firmware.bin", "offset": 0 },
+          { "path": "GateSA_0_8_20240525B-1_3_1.bin", "offset": 0 },
         ]
       }
     ]
