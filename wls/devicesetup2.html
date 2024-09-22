@@ -219,14 +219,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!--<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>-->
     <script type="module" src="/firmware/wls/install-button.js?module"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            form.addEventListener('submit', function (event) {
-                const uuid = document.getElementById('uuid').value;
-                console.log('UUID:', uuid);
-                showQRCODE(uuid);
-            });
-        });
+  
 
         function showQRCODE(uuid) {
             document.getElementById('qr-code').innerHTML = '';
